@@ -173,7 +173,8 @@
       <div class="photo-wrap" id="photoWrap">
         <img id="photoPreview" class="photo" src="photo.png" />
       </div>
-    </div>to moved to single container -->
+    </div>
+      <!-- photo moved to single container -->
     </div>
 
     <div class="name" id="cardName">NAVJOT SINGH CHAHAL</div>
@@ -201,7 +202,7 @@
     }
   }
   let lastShake = 0;
-  let shakeThreshold = 15; // sensitivity
+  let shakeThreshold = 12; // lower = more sensitive // sensitivity
 
   // Create overlay
   const overlay = document.createElement('div');
@@ -285,9 +286,21 @@ motionBtn.addEventListener('click', enableMotion); } catch(e){}
   }
 
   window.addEventListener('devicemotion', (e) => {
-    const a = e.accelerationIncludingGravity;
-    if (!a) return;
-    const magnitude = Math.sqrt(a.x*a.x + a.y*a.y + a.z*a.z);
+    const acc = e.accelerationIncludingGravity;
+    if (!acc) return;
+
+    const x = acc.x || 0;
+    const y = acc.y || 0;
+    const z = acc.z || 0;
+
+    const magnitude = Math.sqrt(x*x + y*y + z*z);
+    const now = Date.now();
+
+    if (magnitude > shakeThreshold && now - lastShake > 1000) {
+      lastShake = now;
+      showOverlay();
+    }
+  });
     const now = Date.now();
     if (magnitude > shakeThreshold && now - lastShake > 1200) {
       lastShake = now;
