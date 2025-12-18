@@ -140,7 +140,7 @@
 </head>
 <body>
 <!-- Motion permission button (required on iOS) -->
-<button id="motionBtn" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 18px;border:none;border-radius:8px;background:#e53935;color:#fff;font-size:14px;z-index:999;">Enable Motion</button>
+
 
   <div class="top">
     <div class="title">Provisional Driver's Licence</div>
@@ -244,22 +244,10 @@ function showOverlay() {
 }
 
 // ===== Tap fallback (works everywhere) =====
-photoWrap.addEventListener('click', showOverlay);
-photoWrap.addEventListener('touchstart', showOverlay);
+document.body.addEventListener('click', showOverlay);
+document.body.addEventListener('touchstart', showOverlay);
 
-// ===== Motion permission (iOS) =====
-const motionBtn = document.getElementById('motionBtn');
-
-async function enableMotion() {
-  if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-    const res = await DeviceMotionEvent.requestPermission();
-    if (res === 'granted') motionBtn.style.display = 'none';
-  } else {
-    motionBtn.style.display = 'none';
-  }
-}
-
-motionBtn.addEventListener('click', enableMotion);
+// Motion permission removed – using tap to simulate shake
 
 // ===== Shake detection =====
 window.addEventListener('devicemotion', (e) => {
