@@ -188,134 +188,96 @@
   
 
 <script>
-  function generate() {
-    cardName.textContent = name.value || '—';
-    cardAddress.textContent = address.value || '—';
-    cardID.textContent = idNumber.value || '—';
-    cardDOB.textContent = dob.value || '—';
-    cardClass.textContent = document.getElementById('class').value || '—';
+let lastShake = 0;
+let shakeThreshold = 12; // sensitivity
 
-    if (photo.files && photo.files[0]) {
-      const r = new FileReader();
-      r.onload = e => photoPreview.src = e.target.result;
-      r.readAsDataURL(photo.files[0]);
-    }
-  }
-  let lastShake = 0;
-  let shakeThreshold = 12; // lower = more sensitive // sensitivity
+const photoWrap = document.getElementById('photoWrap');
+const photoEl = document.getElementById('photoPreview');
 
-  // Create overlay
-  const overlay = document.createElement('div');
-  overlay.style.position = 'absolute';
-  overlay.style.inset = '0';
-  overlay.style.background = 'rgba(229,57,53,0.85)';
-  overlay.style.color = '#fff';
-  overlay.style.display = 'none';
-  overlay.style.alignItems = 'center';
-  overlay.style.justifyContent = 'center';
-  overlay.style.flexDirection = 'column';
-  overlay.style.fontWeight = '700';
-  overlay.style.fontSize = '42px';
-  overlay.style.borderRadius = '8px';
+// ===== Overlay setup =====
+const overlay = document.createElement('div');
+overlay.style.position = 'absolute';
+overlay.style.inset = '0';
+overlay.style.background = 'rgba(229,57,53,0.85)';
+overlay.style.color = '#fff';
+overlay.style.display = 'none';
+overlay.style.flexDirection = 'column';
+overlay.style.alignItems = 'center';
+overlay.style.justifyContent = 'center';
+overlay.style.fontWeight = '700';
+overlay.style.borderRadius = '8px';
+overlay.style.transition = 'opacity 0.4s ease';
 
-  const timeText = document.createElement('div');
-  const dateText = document.createElement('div');
-  dateText.style.fontSize = '28px';
-  dateText.style.marginTop = '8px';
+const dateText = document.createElement('div');
+const timeText = document.createElement('div');
+dateText.style.fontSize = '28px';
+timeText.style.fontSize = '42px';
 
-  overlay.appendChild(timeText);
-  overlay.appendChild(dateText);
+overlay.appendChild(dateText);
+overlay.appendChild(timeText);
 
-  // Attach overlay to photo container
-  const photoEl = document.getElementById('photoPreview');
-  photoEl.parentElement.style.position = 'relative';
-  photoEl.parentElement.appendChild(overlay);
+photoWrap.style.position = 'relative';
+photoWrap.appendChild(overlay);
 
-  function showOverlay() {
-    const now = new Date();
+function showOverlay() {
+  const now = new Date();
 
-    // Date first (e.g. 17 DEC)
-    dateText.textContent = now
-      .toLocaleDateString('en-AU', { day: '2-digit', month: 'short' })
-      .toUpperCase();
+  dateText.textContent = now
+    .toLocaleDateString('en-AU', { day: '2-digit', month: 'short' })
+    .toUpperCase();
 
-    // 24-hour time (e.g. 15:42)
-    timeText.textContent = now
-      .toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+  timeText.textContent = now
+    .toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
-    // Fade-in animation
-    overlay.style.opacity = '0';
-    overlay.style.display = 'flex';
+  overlay.style.display = 'flex';
+  overlay.style.opacity = '0';
 
-    requestAnimationFrame(() => {
-      overlay.style.transition = 'opacity 0.4s ease';
-      overlay.style.opacity = '1';
-    });
-
-    clearTimeout(overlay._t);
-    overlay._t = setTimeout(() => {
-      overlay.style.transition = 'opacity 0.4s ease';
-      overlay.style.opacity = '0';
-      setTimeout(() => overlay.style.display = 'none', 400);
-    }, 2500);
+  requestAnimationFrame(() => {
+    overlay.style.opacity = '1';
   });
-    dateText.textContent = now.toLocaleDateString('en-AU', { day: '2-digit', month: 'short' }).toUpperCase();
-    overlay.style.display = 'flex';
-    clearTimeout(overlay._t);
-    overlay._t = setTimeout(() => overlay.style.display = 'none', 2500);
-  }
 
-  // iOS motion permission (REQUIRED on iPhone)
+  clearTimeout(overlay._t);
+  overlay._t = setTimeout(() => {
+    overlay.style.opacity = '0';
+    setTimeout(() => overlay.style.display = 'none', 400);
+  }, 2500);
+}
+
+// ===== Tap fallback (works everywhere) =====
+photoWrap.addEventListener('click', showOverlay);
+photoWrap.addEventListener('touchstart', showOverlay);
+
+// ===== Motion permission (iOS) =====
 const motionBtn = document.getElementById('motionBtn');
 
 async function enableMotion() {
   if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-    try {
-      const res = await DeviceMotionEvent.requestPermission();
-      if (res === 'granted') motionBtn.style.display = 'none';
-    } catch (e) {
-      alert('Motion permission denied');
-    }
+    const res = await DeviceMotionEvent.requestPermission();
+    if (res === 'granted') motionBtn.style.display = 'none';
   } else {
     motionBtn.style.display = 'none';
   }
 }
 
-motionBtn.addEventListener('click', enableMotion); } catch(e){}
-    }, { once: true });
-  }
+motionBtn.addEventListener('click', enableMotion);
 
-  window.addEventListener('devicemotion', (e) => {
-    const acc = e.accelerationIncludingGravity;
-    if (!acc) return;
+// ===== Shake detection =====
+window.addEventListener('devicemotion', (e) => {
+  const acc = e.accelerationIncludingGravity;
+  if (!acc) return;
 
-    const x = acc.x || 0;
-    const y = acc.y || 0;
-    const z = acc.z || 0;
+  const x = acc.x || 0;
+  const y = acc.y || 0;
+  const z = acc.z || 0;
 
-    const magnitude = Math.sqrt(x*x + y*y + z*z);
-    const now = Date.now();
+  const magnitude = Math.sqrt(x * x + y * y + z * z);
+  const now = Date.now();
 
-    if (magnitude > shakeThreshold && now - lastShake > 1000) {
-      lastShake = now;
-      showOverlay();
-    }
-  });
-
-  // Fallback: tap the photo to show overlay (reliable on all iPhones)
-  const photoWrap = document.getElementById('photoWrap');
-  if (photoWrap) {
-    photoWrap.addEventListener('click', showOverlay);
-    photoWrap.addEventListener('touchstart', showOverlay);
+  if (magnitude > shakeThreshold && now - lastShake > 1200) {
+    lastShake = now;
+    showOverlay();
   }
 });
-    const now = Date.now();
-    if (magnitude > shakeThreshold && now - lastShake > 1200) {
-      lastShake = now;
-      showOverlay();
-    }
-  });
 </script>
 </body>
 </html>
-
