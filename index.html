@@ -49,6 +49,8 @@
     .row {
       display: flex;
       gap: 16px;
+      align-items: flex-start;
+      justify-content: space-between;
     }
 
     .photo {
@@ -137,6 +139,8 @@
   </style>
 </head>
 <body>
+<!-- Motion permission button (required on iOS) -->
+<button id="motionBtn" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 18px;border:none;border-radius:8px;background:#e53935;color:#fff;font-size:14px;z-index:999;">Enable Motion</button>
 
   <div class="top">
     <div class="title">Provisional Driver's Licence</div>
@@ -164,6 +168,12 @@
           <span class="value" id="cardClass">C</span>
         </p>
       </div>
+
+      <!-- Photo container (overlay lives here) -->
+      <div class="photo-wrap" style="position:relative;">
+        <img id="photoPreview" class="photo" src="photo.png" />
+      </div>
+    </div>
       <img id="photoPreview" class="photo" src="photo.png" />
     </div>
 
@@ -223,17 +233,55 @@
 
   function showOverlay() {
     const now = new Date();
-    timeText.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    // Date first (e.g. 17 DEC)
+    dateText.textContent = now
+      .toLocaleDateString('en-AU', { day: '2-digit', month: 'short' })
+      .toUpperCase();
+
+    // 24-hour time (e.g. 15:42)
+    timeText.textContent = now
+      .toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+    // Fade-in animation
+    overlay.style.opacity = '0';
+    overlay.style.display = 'flex';
+
+    requestAnimationFrame(() => {
+      overlay.style.transition = 'opacity 0.4s ease';
+      overlay.style.opacity = '1';
+    });
+
+    clearTimeout(overlay._t);
+    overlay._t = setTimeout(() => {
+      overlay.style.transition = 'opacity 0.4s ease';
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.style.display = 'none', 400);
+    }, 2500);
+  });
     dateText.textContent = now.toLocaleDateString('en-AU', { day: '2-digit', month: 'short' }).toUpperCase();
     overlay.style.display = 'flex';
     clearTimeout(overlay._t);
     overlay._t = setTimeout(() => overlay.style.display = 'none', 2500);
   }
 
-  // iOS permission
+  // iOS motion permission (REQUIRED on iPhone)
+const motionBtn = document.getElementById('motionBtn');
+
+async function enableMotion() {
   if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-    document.body.addEventListener('click', async () => {
-      try { await DeviceMotionEvent.requestPermission(); } catch(e){}
+    try {
+      const res = await DeviceMotionEvent.requestPermission();
+      if (res === 'granted') motionBtn.style.display = 'none';
+    } catch (e) {
+      alert('Motion permission denied');
+    }
+  } else {
+    motionBtn.style.display = 'none';
+  }
+}
+
+motionBtn.addEventListener('click', enableMotion); } catch(e){}
     }, { once: true });
   }
 
