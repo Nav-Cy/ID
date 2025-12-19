@@ -123,7 +123,7 @@ body {
   );
 }
 
-/* Overlay Styles - Fill effect from center */
+/* Overlay Styles - Fill from center and fade out */
 .overlay {
   position: absolute;
   inset: 0;
@@ -137,6 +137,7 @@ body {
   opacity: 0;
   color: #fff;
   transition: transform 0.4s ease, opacity 0.4s ease;
+  pointer-events: none; /* prevent interaction */
 }
 
 .overlay.show {
@@ -197,15 +198,12 @@ body {
 const overlay = document.getElementById('overlay');
 const dateText = document.getElementById('dateText');
 const timeText = document.getElementById('timeText');
-const trigger = document.getElementById('photoWrap');
 
 function showOverlay() {
   const now = new Date();
-
   dateText.textContent = now
     .toLocaleDateString('en-AU', { day: '2-digit', month: 'short' })
     .toUpperCase();
-
   timeText.textContent = now
     .toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
@@ -217,8 +215,31 @@ function showOverlay() {
   }, 2500);
 }
 
-trigger.addEventListener('click', showOverlay);
-trigger.addEventListener('touchstart', showOverlay);
+// Simple shake detection
+let lastX, lastY, lastZ;
+let lastTime = Date.now();
+
+window.addEventListener('devicemotion', function(event) {
+  const acc = event.accelerationIncludingGravity;
+  const currentTime = Date.now();
+
+  if ((currentTime - lastTime) > 100) { // sample every 100ms
+    const deltaX = acc.x - (lastX || 0);
+    const deltaY = acc.y - (lastY || 0);
+    const deltaZ = acc.z - (lastZ || 0);
+
+    const speed = Math.abs(deltaX + deltaY + deltaZ);
+
+    if (speed > 25) { // shake threshold, tweak as needed
+      showOverlay();
+    }
+
+    lastX = acc.x;
+    lastY = acc.y;
+    lastZ = acc.z;
+    lastTime = currentTime;
+  }
+});
 </script>
 </body>
 </html>
