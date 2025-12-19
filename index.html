@@ -215,11 +215,14 @@ fill.style.bottom = '0';
 fill.style.width = '100%';
 fill.style.height = '0%';
 fill.style.background = 'rgba(229,57,53,0.85)';
-fill.style.transition = 'height 0.6s ease-out';
+fill.style.transition = 'height 0.45s ease-out';
 
 // content layer
 const content = document.createElement('div');
 content.style.position = 'relative';
+content.style.transform = 'translateY(6px)';
+content.style.transition = 'transform 0.45s ease-out, opacity 0.3s ease';
+content.style.opacity = '0';
 content.style.zIndex = '2';
 content.style.display = 'flex';
 content.style.flexDirection = 'column';
@@ -254,13 +257,22 @@ function showOverlay() {
   // trigger bottom-to-top fill
   requestAnimationFrame(() => {
     fill.style.height = '100%';
+    content.style.transform = 'translateY(0)';
+    content.style.opacity = '1';
   });
 
   clearTimeout(overlay._t);
-  overlay._t = setTimeout(() => {
-    fill.style.height = '0%';
-    setTimeout(() => overlay.style.display = 'none', 600);
-  }, 2500);
+overlay._t = setTimeout(() => {
+    overlay.style.transition = 'opacity 0.4s ease';
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      overlay.style.opacity = '1';
+      fill.style.height = '0%';
+      content.style.opacity = '0';
+      content.style.transform = 'translateY(6px)';
+    }, 400);
+  }, 2200);
 }
 
 // ===== Tap fallback (works everywhere) =====
@@ -289,4 +301,3 @@ window.addEventListener('devicemotion', (e) => {
 </script>
 </body>
 </html>
-
