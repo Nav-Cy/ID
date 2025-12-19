@@ -123,7 +123,7 @@ body {
   );
 }
 
-/* Overlay Styles - Fill from bottom to top, fade out from center */
+/* Overlay Styles - Fill bottom-to-top, fade from center */
 .overlay {
   position: absolute;
   bottom: 0;
@@ -192,10 +192,10 @@ body {
     </div>
 
     <div class="photo-wrap" id="photoWrap">
-      <img src="IMG_7620.jpg" class="photo" />
+      <img src="photo.png" class="photo" />
       <div class="overlay" id="overlay">
-        <div class="date" id="dateText"></div>
-        <div class="time" id="timeText"></div>
+        <div class="date" id="dateText" style="display:none;"></div>
+        <div class="time" id="timeText" style="display:none;"></div>
       </div>
     </div>
   </div>
@@ -223,14 +223,24 @@ function showOverlay() {
   dateText.textContent = now.toLocaleDateString('en-AU', { day: '2-digit', month: 'short' }).toUpperCase();
   timeText.textContent = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
+  // Show overlay and text
   overlay.classList.remove('fade-center');
   overlay.classList.add('show');
+  dateText.style.display = 'block';
+  timeText.style.display = 'block';
 
+  // Fade out from center after 2.5s
   clearTimeout(overlay._t);
   overlay._t = setTimeout(() => {
     overlay.classList.remove('show');
     overlay.classList.add('fade-center');
-    setTimeout(() => overlay.classList.remove('fade-center'), 400);
+    
+    // Hide the text after fade-center completes
+    setTimeout(() => {
+      overlay.classList.remove('fade-center');
+      dateText.style.display = 'none';
+      timeText.style.display = 'none';
+    }, 400); // match CSS transition
   }, 2500);
 }
 
@@ -263,7 +273,7 @@ function initShakeDetection() {
       .then(permissionState => {
         if (permissionState === 'granted') {
           window.addEventListener('devicemotion', handleMotion);
-          enableBtn.style.display = 'none'; // hide button
+          enableBtn.style.display = 'none';
         } else {
           alert('Permission denied for motion sensors.');
         }
