@@ -1,41 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digital Licence Mockup</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Digital Licence (UI Demo)</title>
+
 <style>
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-  background: #f5f5f5;
-  display: flex;
-  justify-content: center;
-  padding: 40px 0;
+  background: white;
 }
 
-/* Top header */
 .top {
+  background: #000;
+  color: #fff;
+  padding: 14px 16px;
   text-align: center;
-  margin-bottom: 16px;
 }
-.top .title {
-  font-weight: 600;
-  font-size: 20px;
-}
-.top .subtitle {
-  font-size: 12px;
-  color: #555;
-  opacity: 0.8;
-}
+.top .title { font-weight: 600; }
+.top .subtitle { font-size: 12px; opacity: 0.8; }
+
 
 /* Tabs */
 .tabs {
   display: flex;
-  width: 390px;
-  margin-bottom: 16px;
   background: #e53935;
   color: #fff;
 }
@@ -51,34 +42,13 @@ body {
   border-bottom: 4px solid #ffeb3b;
 }
 
-/* Licence card */
+/* Main screen */
 .screen {
-  position: relative;
-  width: 390px;
   background: #fff;
-  border-radius: 18px;
-  overflow: hidden;
-  padding-bottom: 20px;
+  padding-bottom: 0;
 }
 
-/* Watermark logo behind info */
-.watermark {
-  position: absolute;
-  top: 60px;       /* move up */
-  left: 30px;      /* move left */
-  width: 240px;    /* size of watermark */
-  opacity: 0.25;   /* visible but subtle */
-  pointer-events: none;
-  z-index: 0;      /* behind all content */
-}
-
-/* Ensure all other content stays above watermark */
-.screen > *:not(.watermark) {
-  position: relative;
-  z-index: 1;
-}
-
-/* Row layout */
+/* Layout row */
 .row {
   display: grid;
   grid-template-columns: 1fr 180px;
@@ -86,8 +56,8 @@ body {
   padding: 20px;
 }
 
-/* Info content */
-.info p { margin: 0 0 12px; }
+/* Info text */
+.info p { margin: 0 0 22px; }
 .label { font-size: 12px; color: #777; }
 .value { font-size: 18px; font-weight: 500; }
 
@@ -99,10 +69,45 @@ body {
 }
 .photo {
   width: 170px;
-  height: 220px;
+  height: 210px;
   border-radius: 16px;
   object-fit: cover;
   border: 1px solid #ccc;
+}
+
+/* Overlay animation */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(243,77,74,0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s ease;
+  border-radius: 16px;
+}
+
+.overlay.show {
+  transform: scaleY(1);
+}
+
+.overlay.fade {
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.overlay .date {
+  font-size: 28px;
+  font-weight: 600;
+}
+.overlay .time {
+  font-size: 42px;
+  font-weight: 700;
 }
 
 /* Divider */
@@ -112,7 +117,7 @@ body {
   margin: 0 20px 10px;
 }
 
-/* Name and address */
+/* Name + address */
 .name {
   margin: 10px 20px 2px;
   font-size: 22px;
@@ -140,11 +145,34 @@ body {
   width: fit-content;
 }
 
+.screen {
+  position: relative;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* Watermark image behind content */
+.watermark {
+  position: absolute;
+  top: 50%;             /* adjust vertical position */
+  left: 50%;            /* center horizontally */
+  transform: translate(-50%, -50%);
+  width: 300px;         /* adjust size */
+  opacity: 0.15;        /* more visible */
+  pointer-events: none;  /* won’t block clicks */
+  z-index: 0;           /* behind all content */
+}
+
+/* Keep all other content above watermark */
+.screen > *:not(.watermark) {
+  position: relative;
+  z-index: 1;
+}
 /* Barcode */
 .barcode {
   width: 100%;
+  margin: 40px 0 0;
   padding: 0 20px;
-  margin-top: 20px;
 }
 .barcode img {
   width: 100%;
@@ -154,6 +182,7 @@ body {
 }
 </style>
 </head>
+
 <body>
 
 <div class="top">
@@ -167,11 +196,11 @@ body {
 </div>
 
 <div class="screen">
+  <img src="logo-removebg-preview.png" 
+       alt="SA Logo" 
+       class="watermark">
 
-  <!-- Watermark logo -->
-  <img src="logo-removebg-preview.png" alt="SA Logo" class="watermark">
 
-  <!-- Info row -->
   <div class="row">
     <div class="info">
       <p><span class="label">Licence Number</span><br><span class="value">HV8325</span></p>
@@ -180,7 +209,11 @@ body {
     </div>
 
     <div class="photo-wrap">
-      <img src="IMG_7620.jpg" class="photo" alt="Photo">
+      <img src="IMG_7620.jpg" class="photo">
+      <div class="overlay" id="overlay">
+        <div class="date" id="dateText"></div>
+        <div class="time" id="timeText"></div>
+      </div>
     </div>
   </div>
 
@@ -197,6 +230,76 @@ body {
   </div>
 
 </div>
+
+<script>
+const overlay = document.getElementById('overlay');
+const dateText = document.getElementById('dateText');
+const timeText = document.getElementById('timeText');
+
+/* Show animation */
+function showOverlay() {
+  const now = new Date();
+
+  dateText.textContent = now
+    .toLocaleDateString('en-AU', { day: '2-digit', month: 'short' })
+    .toUpperCase();
+
+  timeText.textContent = now
+    .toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+  overlay.classList.remove('fade');
+  overlay.classList.add('show');
+
+  clearTimeout(overlay._t);
+  overlay._t = setTimeout(() => {
+    overlay.classList.remove('show');
+    overlay.classList.add('fade');
+
+    setTimeout(() => {
+      overlay.classList.remove('fade');
+      dateText.textContent = '';
+      timeText.textContent = '';
+    }, 400);
+  }, 2500);
+}
+
+/* Shake detection */
+let lastX, lastY, lastZ, lastTime = 0;
+const threshold = 25;
+
+function handleMotion(e) {
+  const a = e.accelerationIncludingGravity;
+  const now = Date.now();
+
+  if (now - lastTime > 120) {
+    const dx = a.x - (lastX || 0);
+    const dy = a.y - (lastY || 0);
+    const dz = a.z - (lastZ || 0);
+
+    if (Math.abs(dx + dy + dz) > threshold) {
+      showOverlay();
+    }
+
+    lastX = a.x;
+    lastY = a.y;
+    lastZ = a.z;
+    lastTime = now;
+  }
+}
+
+/* Tap anywhere ONCE to enable motion (iOS-safe) */
+document.addEventListener('click', () => {
+  if (typeof DeviceMotionEvent?.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission().then(state => {
+      if (state === 'granted') {
+        window.addEventListener('devicemotion', handleMotion);
+      }
+    });
+  } else {
+    window.addEventListener('devicemotion', handleMotion);
+  }
+}, { once: true });
+</script>
 
 </body>
 </html>
