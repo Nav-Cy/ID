@@ -61,18 +61,18 @@ body {
   padding-bottom: 20px;
 }
 
-/* Watermark */
-.screen .watermark {
+/* Watermark logo behind info */
+.watermark {
   position: absolute;
-  top: 80px;       /* adjust vertical position */
-  left: 20px;      /* adjust horizontal position */
-  width: 220px;    /* size of watermark */
+  top: 60px;       /* move up */
+  left: 30px;      /* move left */
+  width: 240px;    /* size of watermark */
   opacity: 0.25;   /* visible but subtle */
   pointer-events: none;
   z-index: 0;      /* behind all content */
 }
 
-/* Ensure all other screen content stays above watermark */
+/* Ensure all other content stays above watermark */
 .screen > *:not(.watermark) {
   position: relative;
   z-index: 1;
