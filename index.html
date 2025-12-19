@@ -137,6 +137,31 @@ body {
   width: fit-content;
 }
 
+  .screen {
+  position: relative;
+  background: #fff;
+  overflow: hidden;
+}
+
+.screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("sa-gov-logo.png"); /* <-- your logo image */
+  background-repeat: no-repeat;
+  background-position: center 55%;
+  background-size: 260px;
+  opacity: 0.06;              /* subtle watermark */
+  pointer-events: none;       /* never blocks taps */
+  z-index: 0;
+}
+
+/* Keep content above watermark */
+.screen > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* Barcode */
 .barcode {
   width: 100%;
@@ -172,7 +197,7 @@ body {
       <p><span class="label">Date of Birth</span><br><span class="value">13/03/2007</span></p>
       <p><span class="label">Class</span><br><span class="value">C</span></p>
     </div>
-
+  <img src="logo-removebg-preview.png" class="screen" />
     <div class="photo-wrap">
       <img src="IMG_7620.jpg" class="photo">
       <div class="overlay" id="overlay">
