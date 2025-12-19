@@ -4,14 +4,17 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Digital Licence (UI Demo)</title>
+
 <style>
 * { box-sizing: border-box; }
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, 'sans-serif';
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
   background: black;
 }
 
+/* Header */
 .top {
   background: #000;
   color: #fff;
@@ -21,6 +24,7 @@ body {
 .top .title { font-weight: 600; }
 .top .subtitle { font-size: 12px; opacity: 0.8; }
 
+/* Tabs */
 .tabs {
   display: flex;
   background: #e53935;
@@ -38,20 +42,17 @@ body {
   border-bottom: 4px solid #ffeb3b;
 }
 
+/* Screen */
 .screen {
   background: #fff;
-  padding-bottom: 0px;
 }
 
+/* Info Row */
 .row {
   display: grid;
   grid-template-columns: 1fr 180px;
   gap: 24px;
   padding: 20px;
-}
-
-.info p {
-  margin: 0 0 22px;
 }
 
 .label {
@@ -64,6 +65,9 @@ body {
   font-weight: 500;
 }
 
+.info p { margin: 0 0 22px; }
+
+/* Photo */
 .photo-wrap {
   position: relative;
   overflow: hidden;
@@ -78,67 +82,22 @@ body {
   border: 1px solid #ccc;
 }
 
-.divider {
-  border: none;
-  border-top: 1px solid #e6e6e6;
-  margin: 0 20px 10px;
-}
-
-.name {
-  margin: 10px 20px 2px;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-}
-
-.address {
-  margin: 0 20px 8px;
-  font-size: 17px;
-  color: #6b6b6b;
-}
-
-.badge {
-  margin: 6px 20px 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: #555;
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 600;
-  width: fit-content;
-}
-
-.barcode {
-  width: 100%;
-  margin: 40px 0 0;
-  padding: 0 20px;        /* matches screen side padding */
-}
-.barcode img {
-  width: 100%;
-  height: 110px;          /* barcode thickness */
-  object-fit: contain;    /* keeps barcode readable */
-  display: block;
-}
-
-/* Overlay Styles - Fill bottom-to-top, fade from center */
+/* Overlay */
 .overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   height: 0%;
-  background: rgba(243, 77, 74, 0.9);
+  background: rgba(243, 77, 74, 0.95);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   color: #fff;
-  transition: height 0.5s ease;
   pointer-events: none;
+  transition: height 0.45s ease;
 }
 
 .overlay.show {
@@ -146,9 +105,9 @@ body {
 }
 
 .overlay.fade-center {
-  transition: transform 0.4s ease, opacity 0.4s ease;
   transform: scale(0);
-  opacity: 40;
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
 .overlay .date {
@@ -161,18 +120,73 @@ body {
   font-weight: 700;
 }
 
-/* Enable Shake Button */
-#enableShake {
+/* Dividers */
+.divider {
+  border: none;
+  border-top: 1px solid #e6e6e6;
+  margin: 0 20px 10px;
+}
+
+/* Name & Address */
+.name {
+  margin: 10px 20px 2px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.address {
+  margin: 0 20px 8px;
+  font-size: 17px;
+  color: #6b6b6b;
+}
+
+.badge {
+  margin: 6px 20px 24px;
+  background: #555;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* Barcode – full width bottom */
+.barcode {
+  width: 100%;
+  padding: 0 20px 20px;
+}
+
+.barcode img {
+  width: 100%;
+  height: 110px;
+  object-fit: contain;
   display: block;
-  margin: 20px auto;
-  padding: 10px 30px;
-  font-size: 16px;
-  cursor: pointer;
-  color: white;
+}
+
+/* Tap hint (hidden after permission) */
+.tap-hint {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  z-index: 10;
+}
+.tap-hint.hidden {
+  display: none;
 }
 </style>
 </head>
+
 <body>
+
+<div class="tap-hint" id="tapHint">
+  Tap anywhere to enable motion
+</div>
 
 <div class="top">
   <div class="title">Provisional Driver's Licence</div>
@@ -192,11 +206,11 @@ body {
       <p><span class="label">Class</span><br><span class="value">C</span></p>
     </div>
 
-    <div class="photo-wrap" id="photoWrap">
+    <div class="photo-wrap">
       <img src="IMG_7620.jpg" class="photo" />
       <div class="overlay" id="overlay">
-        <div class="date" id="dateText" style="display:none;"></div>
-        <div class="time" id="timeText" style="display:none;"></div>
+        <div class="date" id="dateText"></div>
+        <div class="time" id="timeText"></div>
       </div>
     </div>
   </div>
@@ -204,96 +218,85 @@ body {
   <hr class="divider">
 
   <div class="name">NAVJOT SINGH CHAHAL</div>
- <div class="address">6 GOULD RD ENFIELD SA 5085</div>
+  <div class="address">6 GOULD RD ENFIELD SA 5085</div>
   <div class="badge">P1</div>
 
   <hr class="divider">
 
   <div class="barcode">
-  <img src="IMG_7675.jpg" alt="Barcode">
+    <img src="IMG_7675.jpg" alt="Barcode">
   </div>
 </div>
-
-<!-- Button for iOS motion permission -->
-<button id="enableShake">Enable Shake</button>
 
 <script>
 const overlay = document.getElementById('overlay');
 const dateText = document.getElementById('dateText');
 const timeText = document.getElementById('timeText');
-const enableBtn = document.getElementById('enableShake');
+const tapHint = document.getElementById('tapHint');
 
+/* Overlay animation */
 function showOverlay() {
   const now = new Date();
   dateText.textContent = now.toLocaleDateString('en-AU', { day: '2-digit', month: 'short' }).toUpperCase();
-  timeText.textContent = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+  timeText.textContent = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
-  // Show overlay and text
   overlay.classList.remove('fade-center');
   overlay.classList.add('show');
-  dateText.style.display = 'block';
-  timeText.style.display = 'block';
 
-  // Fade out from center after 2.5s
-  clearTimeout(overlay._t);
-  overlay._t = setTimeout(() => {
+  clearTimeout(overlay._timer);
+  overlay._timer = setTimeout(() => {
     overlay.classList.remove('show');
     overlay.classList.add('fade-center');
 
-    // Immediately hide text so it disappears with overlay
-    dateText.style.display = 'none';
-    timeText.style.display = 'none';
-
-    // Reset overlay after fade animation completes
     setTimeout(() => {
       overlay.classList.remove('fade-center');
-    }, 400); // match CSS transition
+      dateText.textContent = '';
+      timeText.textContent = '';
+    }, 400);
   }, 2500);
 }
 
-// Shake detection
+/* Shake detection */
 let lastX, lastY, lastZ;
-let lastTime = Date.now();
-const shakeThreshold = 25;
+let lastTime = 0;
+const threshold = 25;
 
-function handleMotion(event) {
-  const acc = event.accelerationIncludingGravity;
-  const currentTime = Date.now();
-  if ((currentTime - lastTime) > 100) {
-    const deltaX = acc.x - (lastX || 0);
-    const deltaY = acc.y - (lastY || 0);
-    const deltaZ = acc.z - (lastZ || 0);
-    const speed = Math.abs(deltaX + deltaY + deltaZ);
-    if (speed > shakeThreshold) showOverlay();
+function handleMotion(e) {
+  const a = e.accelerationIncludingGravity;
+  const now = Date.now();
 
-    lastX = acc.x;
-    lastY = acc.y;
-    lastZ = acc.z;
-    lastTime = currentTime;
+  if (now - lastTime > 120) {
+    const dx = a.x - (lastX || 0);
+    const dy = a.y - (lastY || 0);
+    const dz = a.z - (lastZ || 0);
+
+    if (Math.abs(dx + dy + dz) > threshold) {
+      showOverlay();
+    }
+
+    lastX = a.x;
+    lastY = a.y;
+    lastZ = a.z;
+    lastTime = now;
   }
 }
 
-// Request motion permission on iOS
-function initShakeDetection() {
+/* Tap anywhere to enable motion */
+document.addEventListener('click', () => {
   if (typeof DeviceMotionEvent.requestPermission === 'function') {
-    DeviceMotionEvent.requestPermission()
-      .then(permissionState => {
-        if (permissionState === 'granted') {
-          window.addEventListener('devicemotion', handleMotion);
-          enableBtn.style.display = 'none';
-        } else {
-          alert('Permission denied for motion sensors.');
-        }
-      })
-      .catch(console.error);
+    DeviceMotionEvent.requestPermission().then(state => {
+      if (state === 'granted') {
+        window.addEventListener('devicemotion', handleMotion);
+        tapHint.classList.add('hidden');
+      }
+    });
   } else {
     window.addEventListener('devicemotion', handleMotion);
-    enableBtn.style.display = 'none';
+    tapHint.classList.add('hidden');
   }
-}
-
-// Bind the button
-enableBtn.addEventListener('click', initShakeDetection);
+}, { once: true });
 </script>
+
 </body>
 </html>
+
