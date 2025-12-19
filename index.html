@@ -61,6 +61,23 @@ body {
   padding-bottom: 20px;
 }
 
+/* Watermark */
+.screen .watermark {
+  position: absolute;
+  top: 80px;       /* adjust vertical position */
+  left: 20px;      /* adjust horizontal position */
+  width: 220px;    /* size of watermark */
+  opacity: 0.25;   /* visible but subtle */
+  pointer-events: none;
+  z-index: 0;      /* behind all content */
+}
+
+/* Ensure all other screen content stays above watermark */
+.screen > *:not(.watermark) {
+  position: relative;
+  z-index: 1;
+}
+
 /* Row layout */
 .row {
   display: grid;
@@ -69,28 +86,7 @@ body {
   padding: 20px;
 }
 
-/* Watermark behind Licence info */
-.info-wrap {
-  position: relative; /* make watermark absolute relative to this container */
-}
-
-.info-wrap .watermark {
-  position: absolute;
-  top: 40%;             /* moves watermark up */
-  left: 35%;            /* moves watermark left */
-  transform: translate(-50%, -50%);
-  width: 220px;         /* adjust size */
-  opacity: 0.25;        /* visible but subtle */
-  pointer-events: none;  /* won’t block clicks */
-  z-index: 0;           /* behind all content */
-}
-
-/* Ensure info content stays above watermark */
-.info-wrap .info {
-  position: relative;
-  z-index: 1;
-}
-
+/* Info content */
 .info p { margin: 0 0 12px; }
 .label { font-size: 12px; color: #777; }
 .value { font-size: 18px; font-weight: 500; }
@@ -172,17 +168,15 @@ body {
 
 <div class="screen">
 
+  <!-- Watermark logo -->
+  <img src="logo-removebg-preview.png" alt="SA Logo" class="watermark">
+
+  <!-- Info row -->
   <div class="row">
-    <div class="info-wrap">
-      <!-- Watermark -->
-      <img src="logo-removebg-preview.png" alt="SA Logo" class="watermark" />
-">
-      <!-- Licence info -->
-      <div class="info">
-        <p><span class="label">Licence Number</span><br><span class="value">HV8325</span></p>
-        <p><span class="label">Date of Birth</span><br><span class="value">13/03/2007</span></p>
-        <p><span class="label">Class</span><br><span class="value">C</span></p>
-      </div>
+    <div class="info">
+      <p><span class="label">Licence Number</span><br><span class="value">HV8325</span></p>
+      <p><span class="label">Date of Birth</span><br><span class="value">13/03/2007</span></p>
+      <p><span class="label">Class</span><br><span class="value">C</span></p>
     </div>
 
     <div class="photo-wrap">
