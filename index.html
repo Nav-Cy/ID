@@ -113,14 +113,15 @@ body {
 
 .barcode {
   width: 100%;
-  max-width: 320px;     /* controls overall size */
-  margin: 20px auto 0;
+  max-width: 420px;     /* wider barcode */
+  margin: 30px auto 0;
 }
 
 .barcode img {
   width: 100%;
-  height: auto;         /* prevents distortion */
-  object-fit: contain;  /* ensures full barcode fits */
+  max-height: 110px;    /* controls thickness */
+  height: auto;
+  object-fit: contain;
   display: block;
 }
 /* Overlay Styles - Fill bottom-to-top, fade from center */
