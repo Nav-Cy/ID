@@ -160,6 +160,15 @@ body {
   font-size: 42px;
   font-weight: 700;
 }
+
+/* Enable Shake Button */
+#enableShake {
+  display: block;
+  margin: 20px auto;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -200,21 +209,23 @@ body {
   <div class="barcode"></div>
 </div>
 
+<!-- Button for iOS motion permission -->
+<button id="enableShake">Enable Shake</button>
+
 <script>
 const overlay = document.getElementById('overlay');
 const dateText = document.getElementById('dateText');
 const timeText = document.getElementById('timeText');
+const enableBtn = document.getElementById('enableShake');
 
 function showOverlay() {
   const now = new Date();
   dateText.textContent = now.toLocaleDateString('en-AU', { day: '2-digit', month: 'short' }).toUpperCase();
   timeText.textContent = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
-  // Fill from bottom
   overlay.classList.remove('fade-center');
   overlay.classList.add('show');
 
-  // Fade out from center after 2.5s
   clearTimeout(overlay._t);
   overlay._t = setTimeout(() => {
     overlay.classList.remove('show');
@@ -236,7 +247,6 @@ function handleMotion(event) {
     const deltaY = acc.y - (lastY || 0);
     const deltaZ = acc.z - (lastZ || 0);
     const speed = Math.abs(deltaX + deltaY + deltaZ);
-
     if (speed > shakeThreshold) showOverlay();
 
     lastX = acc.x;
@@ -246,22 +256,27 @@ function handleMotion(event) {
   }
 }
 
-// Request permission on iOS
+// Request motion permission on iOS
 function initShakeDetection() {
   if (typeof DeviceMotionEvent.requestPermission === 'function') {
     DeviceMotionEvent.requestPermission()
       .then(permissionState => {
-        if (permissionState === 'granted') window.addEventListener('devicemotion', handleMotion);
-        else alert('Permission denied for motion sensors.');
+        if (permissionState === 'granted') {
+          window.addEventListener('devicemotion', handleMotion);
+          enableBtn.style.display = 'none'; // hide button
+        } else {
+          alert('Permission denied for motion sensors.');
+        }
       })
       .catch(console.error);
   } else {
     window.addEventListener('devicemotion', handleMotion);
+    enableBtn.style.display = 'none';
   }
 }
 
-// Initialize on first user gesture (required for iOS)
-document.body.addEventListener('click', initShakeDetection, { once: true });
+// Bind the button
+enableBtn.addEventListener('click', initShakeDetection);
 </script>
 </body>
 </html>
