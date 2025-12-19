@@ -43,28 +43,26 @@
     /* Card area */
     .screen {
       background: #fff;
-      padding: 16px;
+      padding: 0;
     }
 
     .row {
       display: grid;
-      grid-template-columns: 1fr 160px;
-      column-gap: 24px;
+      grid-template-columns: 1fr auto;
       align-items: start;
-      padding: 16px 20px 8px;
-    }n-item.photo {
-      width: 156px;
-      height: 196px;
+      padding: 16px 20px 12px;
+    }
+
+    .photo {
+      width: 160px;
+      height: 200px;
       border-radius: 14px;
       object-fit: cover;
-      border: none;
     }
-     .info p {
-      margin: 0 0 18px;
-    }   }
 
     .info p {
-      margin:
+      margin: 0 0 18px;
+    }
 
     .label {
       font-size: 12px;
@@ -73,27 +71,30 @@
 
     .value {
       font-size: 18px;
-  .name {
-      margin: 12px 20px 2px;
+      font-weight: 500;
+    }
+
+    .name {
+      margin: 14px 20px 2px;
       font-size: 20px;
       font-weight: 600;
-      letter-spacing: 0.4px;
-    }     l.address {
-      margin: 0 20px 8px;
-      color: #6f6f6f;
+    }
+
+    .address {
+      margin: 0 20px 6px;
       font-size: 14px;
-    }666;
- .badge {
-      margin: 6px 20px 18px;
+      color: #6f6f6f;
+    }
+
+    .badge {
+      margin: 6px 20px 16px;
       background: #5f6468;
-      font-size: 13px;
-    }6px;
       font-size: 13px;
     }
 
     /* Barcode */
     .barcode {
-      margin: 40px 20px 30px;
+      margin: 20px;
       height: 90px;
       background: repeating-linear-gradient(
         90deg,
@@ -131,7 +132,12 @@
       border-radius: 6px;
       font-size: 16px;
     }
-  </style>
+  .divider {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 4px 0;
+    }
+</style>
 </head>
 <body>
 <!-- Motion permission button (required on iOS) -->
@@ -164,13 +170,11 @@
         </p>
       </div>
 
-      <!-- Photo container (overlay lives here) -->
       <div class="photo-wrap" id="photoWrap">
         <img id="photoPreview" class="photo" src="photo.png" />
       </div>
     </div>
-      <!-- photo moved to single container -->
-    </div>
+    <hr class="divider" />
 
     <div class="name" id="cardName">NAVJOT SINGH CHAHAL</div>
     <div class="address" id="cardAddress">—</div>
