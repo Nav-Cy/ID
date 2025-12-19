@@ -66,6 +66,8 @@ body {
 
 .photo-wrap {
   position: relative;
+  overflow: hidden;
+  border-radius: 16px;
 }
 
 .photo {
@@ -121,26 +123,25 @@ body {
   );
 }
 
-/* Overlay Styles - Fills Upwards */
+/* Overlay Styles - Fill effect from center */
 .overlay {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 0%;
+  inset: 0;
   background: rgba(229,57,53,0.9);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  transform: scale(0);
+  opacity: 0;
   color: #fff;
-  transition: height 0.4s ease;
+  transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
 .overlay.show {
-  height: 100%;
+  transform: scale(1);
+  opacity: 1;
 }
 
 .overlay .date {
