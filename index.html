@@ -47,23 +47,24 @@
     }
 
     .row {
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      padding: 20px;
-    }
-
-    .photo {
-      width: 140px;
-      height: 180px;
-      border-radius: 12px;
+      display: grid;
+      grid-template-columns: 1fr 160px;
+      column-gap: 24px;
+      align-items: start;
+      padding: 16px 20px 8px;
+    }n-item.photo {
+      width: 156px;
+      height: 196px;
+      border-radius: 14px;
       object-fit: cover;
       border: none;
     }
+     .info p {
+      margin: 0 0 18px;
+    }   }
 
     .info p {
-      margin: 6px 0 10px;
-    }
+      margin:
 
     .label {
       font-size: 12px;
@@ -72,29 +73,21 @@
 
     .value {
       font-size: 18px;
-      font-weight: 500;
-    }
-
-    .name {
-      margin: 10px 20px 0;
-      font-size: 18px;
+  .name {
+      margin: 12px 20px 2px;
+      font-size: 20px;
       font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-
-    .address {
-      margin: 6px 20px 0;
-      color: #666;
+      letter-spacing: 0.4px;
+    }     l.address {
+      margin: 0 20px 8px;
+      color: #6f6f6f;
       font-size: 14px;
-    }
-
-    .badge {
-      display: inline-block;
-      margin: 12px 20px;
-      background: #5a5f63;
-      color: #fff;
-      padding: 6px 10px;
-      border-radius: 6px;
+    }666;
+ .badge {
+      margin: 6px 20px 18px;
+      background: #5f6468;
+      font-size: 13px;
+    }6px;
       font-size: 13px;
     }
 
@@ -138,7 +131,6 @@
       border-radius: 6px;
       font-size: 16px;
     }
-    
   </style>
 </head>
 <body>
