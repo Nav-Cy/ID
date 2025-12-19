@@ -1,244 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Digital Licence (UI Demo)</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-      background: #f4f4f4;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Digital Licence (UI Demo)</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  background: #f4f4f4;
+}
 
-    /* Top status / title */
-    .top {
-      background: #000;
-      color: #fff;
-      padding: 14px 16px;
-      text-align: center;
-    }
-    .top .title { font-weight: 600; }
-    .top .subtitle { font-size: 12px; opacity: 0.8; }
+.top {
+  background: #000;
+  color: #fff;
+  padding: 14px 16px;
+  text-align: center;
+}
+.top .title { font-weight: 600; }
+.top .subtitle { font-size: 12px; opacity: 0.8; }
 
-    /* Tabs */
-    .tabs {
-      display: flex;
-      background: #e53935;
-      color: #fff;
-    }
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 12px 0;
-      font-weight: 600;
-      opacity: 0.7;
-    }
-    .tab.active {
-      opacity: 1;
-      border-bottom: 4px solid #ffeb3b;
-    }
+.tabs {
+  display: flex;
+  background: #e53935;
+  color: #fff;
+}
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+  font-weight: 600;
+  opacity: 0.7;
+}
+.tab.active {
+  opacity: 1;
+  border-bottom: 4px solid #ffeb3b;
+}
 
-    /* Card area */
-    .screen {
-      background: #fff;
-      padding: 0;
-    }
+.screen {
+  background: #fff;
+  padding-bottom: 20px;
+}
 
-    .row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: start;
-      padding: 16px 20px 12px;
-    }
+.row {
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 24px;
+  padding: 20px;
+}
 
-    .photo {
-      width: 160px;
-      height: 200px;
-      border-radius: 14px;
-      object-fit: cover;
-    }
+.info p {
+  margin: 0 0 22px;
+}
 
-    .info p {
-      margin: 0 0 18px;
-    }
+.label {
+  font-size: 12px;
+  color: #777;
+}
 
-    .label {
-      font-size: 12px;
-      color: #777;
-    }
+.value {
+  font-size: 18px;
+  font-weight: 500;
+}
 
-    .value {
-      font-size: 18px;
-      font-weight: 500;
-    }
+.photo-wrap {
+  position: relative;
+}
 
-    .name {
-      margin: 14px 20px 2px;
-      font-size: 20px;
-      font-weight: 600;
-    }
+.photo {
+  width: 170px;
+  height: 210px;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
 
-    .address {
-      margin: 0 20px 6px;
-      font-size: 14px;
-      color: #6f6f6f;
-    }
+.divider {
+  border: none;
+  border-top: 1px solid #e6e6e6;
+  margin: 0 20px 10px;
+}
 
-    .badge {
-      margin: 6px 20px 16px;
-      background: #5f6468;
-      font-size: 13px;
-    }
+.name {
+  margin: 10px 20px 2px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
 
-    /* Barcode */
-    .barcode {
-      margin: 20px;
-      height: 90px;
-      background: repeating-linear-gradient(
-        90deg,
-        #000,
-        #000 6px,
-        #fff 6px,
-        #fff 10px
-      );
-    }
+.address {
+  margin: 0 20px 8px;
+  font-size: 14px;
+  color: #6b6b6b;
+}
 
-    .demo {
-      text-align: center;
-      font-size: 12px;
-      color: #999;
-    }
+.badge {
+  margin: 4px 20px 20px;
+  display: inline-block;
+  background: #555;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+}
 
-    /* Form */
-    .form {
-      padding: 16px;
-      background: #fff;
-      margin-top: 12px;
-    }
-    label { font-size: 13px; font-weight: 600; }
-    input {
-      width: 100%;
-      padding: 8px;
-      margin: 6px 0 12px;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #e53935;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-    }
-  .divider {
-      border: none;
-      border-top: 1px solid #e0e0e0;
-      margin: 4px 0;
-    }
+.barcode {
+  margin: 0 20px;
+  height: 96px;
+  background: repeating-linear-gradient(
+    90deg,
+    #000,
+    #000 6px,
+    #fff 6px,
+    #fff 10px
+  );
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(229,57,53,0.9);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(100%);
+  transition: transform 0.35s ease, opacity 0.4s ease;
+  opacity: 0;
+}
+
+.overlay.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.overlay .date {
+  font-size: 28px;
+  font-weight: 600;
+  transform: translateY(8px);
+}
+
+.overlay .time {
+  font-size: 42px;
+  font-weight: 700;
+  transform: translateY(4px);
+}
 </style>
 </head>
 <body>
-<!-- Motion permission button (required on iOS) -->
 
+<div class="top">
+  <div class="title">Provisional Driver's Licence</div>
+  <div class="subtitle">Active until 27 February 2028</div>
+</div>
 
-  <div class="top">
-    <div class="title">Provisional Driver's Licence</div>
-    <div class="subtitle">Active until 27 February 2028</div>
-  </div>
+<div class="tabs">
+  <div class="tab active">Overview</div>
+  <div class="tab">Details</div>
+</div>
 
-  <div class="tabs">
-    <div class="tab active">Overview</div>
-    <div class="tab">Details</div>
-  </div>
+<div class="screen">
+  <div class="row">
+    <div class="info">
+      <p><span class="label">Licence Number</span><br><span class="value">HV8325</span></p>
+      <p><span class="label">Date of Birth</span><br><span class="value">13/03/2007</span></p>
+      <p><span class="label">Class</span><br><span class="value">C</span></p>
+    </div>
 
-  <div class="screen">
-    <div class="row">
-      <div class="info">
-        <p>
-          <span class="label">Licence Number</span><br />
-          <span class="value" id="cardID">HV8325</span>
-        </p>
-        <p>
-          <span class="label">Date of Birth</span><br />
-          <span class="value" id="cardDOB">13/03/2007</span>
-        </p>
-        <p>
-          <span class="label">Class</span><br />
-          <span class="value" id="cardClass">C</span>
-        </p>
-      </div>
-
-      <div class="photo-wrap" id="photoWrap">
-        <img id="photoPreview" class="photo" src="photo.png" />
+    <div class="photo-wrap" id="photoWrap">
+      <img src="photo.png" class="photo" />
+      <div class="overlay" id="overlay">
+        <div class="date" id="dateText"></div>
+        <div class="time" id="timeText"></div>
       </div>
     </div>
-    <hr class="divider" />
-
-    <div class="name" id="cardName">NAVJOT SINGH CHAHAL</div>
-    <div class="address" id="cardAddress">—</div>
-    <div class="badge" id="cardBadge">P1</div>
-
-    <div class="barcode"></div>
-    <div class="demo">UI DEMO ONLY – Not a real licence</div>
   </div>
 
-  
+  <hr class="divider">
+
+  <div class="name">NAVJOT SINGH CHAHAL</div>
+  <div class="address">—</div>
+  <div class="badge">P1</div>
+
+  <div class="barcode"></div>
+</div>
 
 <script>
-let lastShake = 0;
-let shakeThreshold = 12; // sensitivity
-
-const photoWrap = document.getElementById('photoWrap');
-const photoEl = document.getElementById('photoPreview');
-
-// ===== Overlay setup =====
-const overlay = document.createElement('div');
-overlay.style.position = 'absolute';
-overlay.style.inset = '0';
-overlay.style.color = '#fff';
-overlay.style.display = 'none';
-overlay.style.flexDirection = 'column';
-overlay.style.alignItems = 'center';
-overlay.style.justifyContent = 'center';
-overlay.style.fontWeight = '700';
-overlay.style.borderRadius = '8px';
-overlay.style.overflow = 'hidden';
-
-// fill layer (animates bottom -> top)
-const fill = document.createElement('div');
-fill.style.position = 'absolute';
-fill.style.left = '0';
-fill.style.bottom = '0';
-fill.style.width = '100%';
-fill.style.height = '0%';
-fill.style.background = 'rgba(229,57,53,0.85)';
-fill.style.transition = 'height 0.45s ease-out';
-
-// content layer
-const content = document.createElement('div');
-content.style.position = 'relative';
-content.style.transform = 'translateY(6px)';
-content.style.transition = 'transform 0.45s ease-out, opacity 0.3s ease';
-content.style.opacity = '0';
-content.style.zIndex = '2';
-content.style.display = 'flex';
-content.style.flexDirection = 'column';
-content.style.alignItems = 'center';
-
-const dateText = document.createElement('div');
-const timeText = document.createElement('div');
-dateText.style.fontSize = '28px';
-timeText.style.fontSize = '42px';
-
-content.appendChild(dateText);
-content.appendChild(timeText);
-overlay.appendChild(fill);
-overlay.appendChild(content);
-
-photoWrap.style.position = 'relative';
-photoWrap.appendChild(overlay);
+const overlay = document.getElementById('overlay');
+const dateText = document.getElementById('dateText');
+const timeText = document.getElementById('timeText');
+const trigger = document.getElementById('photoWrap');
 
 function showOverlay() {
   const now = new Date();
@@ -250,53 +203,16 @@ function showOverlay() {
   timeText.textContent = now
     .toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
-  overlay.style.display = 'flex';
-  fill.style.height = '0%';
-
-  // trigger bottom-to-top fill
-  requestAnimationFrame(() => {
-    fill.style.height = '100%';
-    content.style.transform = 'translateY(0)';
-    content.style.opacity = '1';
-  });
+  overlay.classList.add('show');
 
   clearTimeout(overlay._t);
-overlay._t = setTimeout(() => {
-    overlay.style.transition = 'opacity 0.4s ease';
-    overlay.style.opacity = '0';
-    setTimeout(() => {
-      overlay.style.display = 'none';
-      overlay.style.opacity = '1';
-      fill.style.height = '0%';
-      content.style.opacity = '0';
-      content.style.transform = 'translateY(6px)';
-    }, 400);
-  }, 2200);
+  overlay._t = setTimeout(() => {
+    overlay.classList.remove('show');
+  }, 2500);
 }
 
-// ===== Tap fallback (works everywhere) =====
-document.body.addEventListener('click', showOverlay);
-document.body.addEventListener('touchstart', showOverlay);
-
-// Motion permission removed – using tap to simulate shake
-
-// ===== Shake detection =====
-window.addEventListener('devicemotion', (e) => {
-  const acc = e.accelerationIncludingGravity;
-  if (!acc) return;
-
-  const x = acc.x || 0;
-  const y = acc.y || 0;
-  const z = acc.z || 0;
-
-  const magnitude = Math.sqrt(x * x + y * y + z * z);
-  const now = Date.now();
-
-  if (magnitude > shakeThreshold && now - lastShake > 1200) {
-    lastShake = now;
-    showOverlay();
-  }
-});
+trigger.addEventListener('click', showOverlay);
+trigger.addEventListener('touchstart', showOverlay);
 </script>
 </body>
 </html>
