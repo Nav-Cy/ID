@@ -151,25 +151,23 @@ body {
   overflow: hidden;
 }
 
-.screen::before {
-  content: "";
+/* Watermark image behind content */
+.watermark {
   position: absolute;
-  inset: 0;
-  background-image: url("logo-removebg-preview.png"); /* <-- this is the logo */
-  background-repeat: no-repeat;
-  background-position: center 60%;
-  background-size: 280px;
-  opacity: 0.05;
-  pointer-events: none;
-  z-index: 0;
+  top: 50%;             /* adjust vertical position */
+  left: 50%;            /* center horizontally */
+  transform: translate(-50%, -50%);
+  width: 300px;         /* adjust size */
+  opacity: 0.15;        /* more visible */
+  pointer-events: none;  /* won’t block clicks */
+  z-index: 0;           /* behind all content */
 }
 
-/* Keep content above watermark */
-.screen > * {
+/* Keep all other content above watermark */
+.screen > *:not(.watermark) {
   position: relative;
   z-index: 1;
 }
-
 /* Barcode */
 .barcode {
   width: 100%;
@@ -198,6 +196,10 @@ body {
 </div>
 
 <div class="screen">
+  <img src="logo-removebg-preview.png" 
+       alt="SA Logo" 
+       class="watermark">
+
 
   <div class="row">
     <div class="info">
