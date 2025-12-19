@@ -234,12 +234,14 @@ function showOverlay() {
   overlay._t = setTimeout(() => {
     overlay.classList.remove('show');
     overlay.classList.add('fade-center');
-    
-    // Hide the text after fade-center completes
+
+    // Immediately hide text so it disappears with overlay
+    dateText.style.display = 'none';
+    timeText.style.display = 'none';
+
+    // Reset overlay after fade animation completes
     setTimeout(() => {
       overlay.classList.remove('fade-center');
-      dateText.style.display = 'none';
-      timeText.style.display = 'none';
     }, 400); // match CSS transition
   }, 2500);
 }
