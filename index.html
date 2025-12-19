@@ -123,26 +123,32 @@ body {
   );
 }
 
-/* Overlay Styles - Fill from center and fade out */
+/* Overlay Styles - Fill from bottom to top, fade out from center */
 .overlay {
   position: absolute;
-  inset: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0%;
   background: rgba(229,57,53,0.9);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transform: scale(0);
-  opacity: 0;
   color: #fff;
-  transition: transform 0.4s ease, opacity 0.4s ease;
-  pointer-events: none; /* prevent interaction */
+  transition: height 0.5s ease;
+  pointer-events: none;
 }
 
 .overlay.show {
-  transform: scale(1);
-  opacity: 1;
+  height: 100%;
+}
+
+.overlay.fade-center {
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  transform: scale(0);
+  opacity: 0;
 }
 
 .overlay .date {
@@ -207,15 +213,20 @@ function showOverlay() {
   timeText.textContent = now
     .toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
+  // Start filling from bottom
+  overlay.classList.remove('fade-center');
   overlay.classList.add('show');
 
+  // Fade out from center after 2.5s
   clearTimeout(overlay._t);
   overlay._t = setTimeout(() => {
     overlay.classList.remove('show');
+    overlay.classList.add('fade-center');
+    setTimeout(() => overlay.classList.remove('fade-center'), 400); // reset
   }, 2500);
 }
 
-// Simple shake detection
+// Shake detection
 let lastX, lastY, lastZ;
 let lastTime = Date.now();
 
@@ -223,14 +234,13 @@ window.addEventListener('devicemotion', function(event) {
   const acc = event.accelerationIncludingGravity;
   const currentTime = Date.now();
 
-  if ((currentTime - lastTime) > 100) { // sample every 100ms
+  if ((currentTime - lastTime) > 100) {
     const deltaX = acc.x - (lastX || 0);
     const deltaY = acc.y - (lastY || 0);
     const deltaZ = acc.z - (lastZ || 0);
-
     const speed = Math.abs(deltaX + deltaY + deltaZ);
 
-    if (speed > 25) { // shake threshold, tweak as needed
+    if (speed > 25) { // shake threshold
       showOverlay();
     }
 
