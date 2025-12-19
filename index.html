@@ -198,7 +198,6 @@ const photoEl = document.getElementById('photoPreview');
 const overlay = document.createElement('div');
 overlay.style.position = 'absolute';
 overlay.style.inset = '0';
-overlay.style.background = 'rgba(229,57,53,0.85)';
 overlay.style.color = '#fff';
 overlay.style.display = 'none';
 overlay.style.flexDirection = 'column';
@@ -206,15 +205,35 @@ overlay.style.alignItems = 'center';
 overlay.style.justifyContent = 'center';
 overlay.style.fontWeight = '700';
 overlay.style.borderRadius = '8px';
-overlay.style.transition = 'opacity 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1)';
+overlay.style.overflow = 'hidden';
+
+// fill layer (animates bottom -> top)
+const fill = document.createElement('div');
+fill.style.position = 'absolute';
+fill.style.left = '0';
+fill.style.bottom = '0';
+fill.style.width = '100%';
+fill.style.height = '0%';
+fill.style.background = 'rgba(229,57,53,0.85)';
+fill.style.transition = 'height 0.6s ease-out';
+
+// content layer
+const content = document.createElement('div');
+content.style.position = 'relative';
+content.style.zIndex = '2';
+content.style.display = 'flex';
+content.style.flexDirection = 'column';
+content.style.alignItems = 'center';
 
 const dateText = document.createElement('div');
 const timeText = document.createElement('div');
 dateText.style.fontSize = '28px';
 timeText.style.fontSize = '42px';
 
-overlay.appendChild(dateText);
-overlay.appendChild(timeText);
+content.appendChild(dateText);
+content.appendChild(timeText);
+overlay.appendChild(fill);
+overlay.appendChild(content);
 
 photoWrap.style.position = 'relative';
 photoWrap.appendChild(overlay);
@@ -230,18 +249,17 @@ function showOverlay() {
     .toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
   overlay.style.display = 'flex';
-  overlay.style.opacity = '0';
-    overlay.style.transform = 'translateY(40px)'; overlay.style.transform = 'translateY(20px)';
+  fill.style.height = '0%';
 
+  // trigger bottom-to-top fill
   requestAnimationFrame(() => {
-    overlay.style.opacity = '1';
-    overlay.style.transform = 'translateY(0)';
+    fill.style.height = '100%';
   });
 
   clearTimeout(overlay._t);
   overlay._t = setTimeout(() => {
-    overlay.style.opacity = '0';
-    setTimeout(() => overlay.style.display = 'none', 400);
+    fill.style.height = '0%';
+    setTimeout(() => overlay.style.display = 'none', 600);
   }, 2500);
 }
 
