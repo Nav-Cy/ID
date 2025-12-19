@@ -96,17 +96,21 @@ body {
 }
 
 .badge {
-  margin: 4px 20px 20px;
-  display: inline-block;
+  margin: 6px 20px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: #555;
   color: #fff;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 13px;
+  padding: 8px 14px; /* less wide, slightly taller */
+  border-radius: 8px;
+  font-size: 15px; /* slightly bigger */
+  font-weight: 600;
+  width: fit-content;
 }
 
 .barcode {
-  margin: 0 20px;
+  margin: 60px 20px 0; /* pushes barcode further down */
   height: 96px;
   background: repeating-linear-gradient(
     90deg,
