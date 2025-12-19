@@ -111,12 +111,18 @@ body {
   width: fit-content;
 }
 
-.barcode img {
-  width: 260px;
-  height: 70px;
-  object-fit: contain;
+.barcode {
+  width: 100%;
+  max-width: 320px;     /* controls overall size */
+  margin: 30px auto 0;
 }
 
+.barcode img {
+  width: 100%;
+  height: auto;         /* prevents distortion */
+  object-fit: contain;  /* ensures full barcode fits */
+  display: block;
+}
 /* Overlay Styles - Fill bottom-to-top, fade from center */
 .overlay {
   position: absolute;
@@ -202,7 +208,9 @@ body {
 
   <hr class="divider">
 
-  <img src="IMG_7675.jpg" class="barcode" />
+  <div class="barcode">
+  <img src="barcode.png" alt="Barcode">
+  </div>
 </div>
 
 <!-- Button for iOS motion permission -->
