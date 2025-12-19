@@ -207,13 +207,10 @@ const timeText = document.getElementById('timeText');
 
 function showOverlay() {
   const now = new Date();
-  dateText.textContent = now
-    .toLocaleDateString('en-AU', { day: '2-digit', month: 'short' })
-    .toUpperCase();
-  timeText.textContent = now
-    .toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+  dateText.textContent = now.toLocaleDateString('en-AU', { day: '2-digit', month: 'short' }).toUpperCase();
+  timeText.textContent = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
-  // Start filling from bottom
+  // Fill from bottom
   overlay.classList.remove('fade-center');
   overlay.classList.add('show');
 
@@ -222,35 +219,49 @@ function showOverlay() {
   overlay._t = setTimeout(() => {
     overlay.classList.remove('show');
     overlay.classList.add('fade-center');
-    setTimeout(() => overlay.classList.remove('fade-center'), 400); // reset
+    setTimeout(() => overlay.classList.remove('fade-center'), 400);
   }, 2500);
 }
 
 // Shake detection
 let lastX, lastY, lastZ;
 let lastTime = Date.now();
+const shakeThreshold = 25;
 
-window.addEventListener('devicemotion', function(event) {
+function handleMotion(event) {
   const acc = event.accelerationIncludingGravity;
   const currentTime = Date.now();
-
   if ((currentTime - lastTime) > 100) {
     const deltaX = acc.x - (lastX || 0);
     const deltaY = acc.y - (lastY || 0);
     const deltaZ = acc.z - (lastZ || 0);
     const speed = Math.abs(deltaX + deltaY + deltaZ);
 
-    if (speed > 25) { // shake threshold
-      showOverlay();
-    }
+    if (speed > shakeThreshold) showOverlay();
 
     lastX = acc.x;
     lastY = acc.y;
     lastZ = acc.z;
     lastTime = currentTime;
   }
-});
+}
+
+// Request permission on iOS
+function initShakeDetection() {
+  if (typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission()
+      .then(permissionState => {
+        if (permissionState === 'granted') window.addEventListener('devicemotion', handleMotion);
+        else alert('Permission denied for motion sensors.');
+      })
+      .catch(console.error);
+  } else {
+    window.addEventListener('devicemotion', handleMotion);
+  }
+}
+
+// Initialize on first user gesture (required for iOS)
+document.body.addEventListener('click', initShakeDetection, { once: true });
 </script>
 </body>
 </html>
-
