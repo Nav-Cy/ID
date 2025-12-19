@@ -206,7 +206,7 @@ overlay.style.alignItems = 'center';
 overlay.style.justifyContent = 'center';
 overlay.style.fontWeight = '700';
 overlay.style.borderRadius = '8px';
-overlay.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+overlay.style.transition = 'opacity 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1)';
 
 const dateText = document.createElement('div');
 const timeText = document.createElement('div');
@@ -231,8 +231,7 @@ function showOverlay() {
 
   overlay.style.display = 'flex';
   overlay.style.opacity = '0';
-    overlay.style.transform = 'translateY(20px)';
-  overlay.style.transform = 'translateY(20px)';
+    overlay.style.transform = 'translateY(40px)'; overlay.style.transform = 'translateY(20px)';
 
   requestAnimationFrame(() => {
     overlay.style.opacity = '1';
